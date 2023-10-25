@@ -17,11 +17,16 @@ public class MailController {
     @PostMapping
     public void getRandomNumberApi(@RequestBody MailDto mailDto) {
         String email = mailDto.getEmail();
-        String randomNumber = mailService.getRandomNumber();
-        redisUtil.setDataExpireWithPrefix("authCode", email, randomNumber, Duration.ofMinutes(30));
+        String randomNumber;
 
-        if (mailService.validateSetAuthCode(email)) {
-            mailService.sendSimpleMessage(email, "이메일 인증 번호 발송", "6 자리 숫자: " + randomNumber);
+        if (mailService.checkIsAuthCode(email) == null) {
+            randomNumber = mailService.getRandomNumber();
+            redisUtil.setDataExpireWithPrefix("authCode", email, randomNumber, Duration.ofMinutes(30));
+            mailService.validateSetAuthCode(email);
+        } else {
+            randomNumber = mailService.checkIsAuthCode(email);
         }
+
+        mailService.sendSimpleMessage(email, "이메일 인증 번호 발송", "6 자리 숫자: " + randomNumber);
     }
 }
