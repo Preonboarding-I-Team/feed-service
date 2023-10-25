@@ -1,7 +1,7 @@
 package com.wanted.preonboarding.user.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.wanted.preonboarding.security.CustomWebMvcTest;
+import com.wanted.preonboarding.security.annotation.CustomWebMvcTest;
 import com.wanted.preonboarding.user.dto.UserPost;
 import com.wanted.preonboarding.user.dto.UserResponse;
 import com.wanted.preonboarding.user.service.UserService;
