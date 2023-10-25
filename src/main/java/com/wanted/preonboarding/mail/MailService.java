@@ -14,19 +14,26 @@ public class MailService {
     private final JavaMailSender mailSender;
     private final RedisUtil redisUtil;
 
+    public String checkIsAuthCode(String email) {
+        String redisValue = redisUtil.getData("authCode:" + email);
+        if (redisValue != null) {
+            return redisValue;
+        }
+        return null;
+    }
+
     public String getRandomNumber() {
         Random random = new Random();
         int randomNumber = random.nextInt(900000) + 100000;
         return String.valueOf(randomNumber);
     }
 
-    public boolean validateSetAuthCode(String email) {
+    public void validateSetAuthCode(String email) {
         String redisValue = redisUtil.getData("authCode:" + email);
 
         if (redisValue == null) {
             throw new NoSuchElementException("authentication code isn't saved for mail : " + email);
         }
-        return true;
     }
 
     public void sendSimpleMessage(String to, String subject, String text) {
