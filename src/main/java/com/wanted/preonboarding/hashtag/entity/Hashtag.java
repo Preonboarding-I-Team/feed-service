@@ -14,6 +14,6 @@ public class Hashtag {
     private Long hashTagId;
     private String name;
     @OneToMany(mappedBy = "hashtag")
-    private Set<FeedHashTag> boardHashTag = new HashSet<>();
+    private Set<FeedHashTag> feedHashTag = new HashSet<>();
 
 }
