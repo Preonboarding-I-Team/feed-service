@@ -3,10 +3,7 @@ package com.wanted.preonboarding.feed.entity;
 import com.wanted.preonboarding.global.entity.BaseEntity;
 import com.wanted.preonboarding.hashtag.entity.FeedHashTag;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -16,6 +13,7 @@ import java.util.Set;
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
+@Setter
 @Builder
 public class Feed extends BaseEntity {
 
