@@ -13,7 +13,6 @@ import java.util.Set;
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
-@Setter
 @Builder
 public class Feed extends BaseEntity {
 
@@ -47,4 +46,7 @@ public class Feed extends BaseEntity {
     @OneToMany(mappedBy = "feed")
     private Set<FeedHashTag> feedHashTag = new HashSet<>();
 
+    public void increseShareCount() {
+        this.shareCount++;
+    }
 }

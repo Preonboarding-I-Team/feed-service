@@ -4,25 +4,20 @@ package com.wanted.preonboarding.feed.service;
 import com.wanted.preonboarding.feed.entity.Feed;
 import com.wanted.preonboarding.feed.repository.FeedRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.http.client.reactive.ClientHttpResponse;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.Optional;
 
 @Service
-public class FeedShareService {
-
-    private final FeedRepository feedRepository;
-    private final RestTemplate restTemplate;
+public class FeedService {
 
     @Autowired
-    public FeedShareService(FeedRepository feedRepository, RestTemplate restTemplate) {
-        this.feedRepository = feedRepository;
-        this.restTemplate = restTemplate;
-    }
+    private FeedRepository feedRepository;
+
+    @Autowired
+    private RestTemplate restTemplate;
 
     public boolean shareFeed(Long feedId, String type) {
         Optional<Feed> optionalFeed = feedRepository.findById(feedId);
@@ -33,18 +28,22 @@ public class FeedShareService {
             ResponseEntity<String> response = requestExternalApi(feed.getContentId(), type);
 
             if (response.getStatusCode().is2xxSuccessful()) {
-                feed.setShareCount(feed.getShareCount() + 1);
+                feed.increseShareCount();
                 feedRepository.save(feed);
                 return true;
             }
         }
-        return true;
+        return false; //예외 처리
     }
 
     private ResponseEntity<String> requestExternalApi(String contentId, String type) {
         String url = setUrl(contentId, type);
 
         ResponseEntity<String> response = restTemplate.postForEntity(url, null, String.class);
+
+        System.out.println("url : "+url);
+        System.out.println("response : " + response.getStatusCode());
+
         return response;
     }
 
