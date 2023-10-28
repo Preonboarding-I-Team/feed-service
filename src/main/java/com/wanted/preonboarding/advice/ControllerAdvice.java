@@ -1,9 +1,11 @@
 package com.wanted.preonboarding.advice;
 
 import com.wanted.preonboarding.dto.ErrorResponse;
+import com.wanted.preonboarding.exception.GlobalException;
 import jakarta.validation.ConstraintViolationException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -26,6 +28,13 @@ public class ControllerAdvice {
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ErrorResponse handleConstraintViolationException(ConstraintViolationException e) {
         return ErrorResponse.of(e.getConstraintViolations());
+    }
+
+    @ExceptionHandler
+    public ResponseEntity<ErrorResponse> handleBusinessLogicException(GlobalException e) {
+        int status = e.getExceptionCode().getStatus();
+        ErrorResponse response = ErrorResponse.of(e.getExceptionCode());
+        return new ResponseEntity<>(response, HttpStatus.valueOf(status));
     }
 
     @ExceptionHandler(HttpRequestMethodNotSupportedException.class)
