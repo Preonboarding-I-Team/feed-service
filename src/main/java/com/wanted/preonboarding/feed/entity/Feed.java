@@ -3,10 +3,7 @@ package com.wanted.preonboarding.feed.entity;
 import com.wanted.preonboarding.global.entity.BaseEntity;
 import com.wanted.preonboarding.hashtag.entity.FeedHashTag;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -49,4 +46,15 @@ public class Feed extends BaseEntity {
     @OneToMany(mappedBy = "feed")
     private Set<FeedHashTag> feedHashTag = new HashSet<>();
 
+    public void setFeedHashTags(Set<FeedHashTag> feedHashTags) {
+        this.feedHashTag = feedHashTags;
+    }
+
+    public void incrementShareCount() {
+        this.shareCount++;
+    }
+
+    public void incrementLikeCount() {
+        this.likeCount++;
+    }
 }

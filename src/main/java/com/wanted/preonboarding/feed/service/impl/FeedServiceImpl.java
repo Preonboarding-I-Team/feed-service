@@ -2,7 +2,7 @@ package com.wanted.preonboarding.feed.service.impl;
 
 import com.wanted.preonboarding.feed.dto.CreateFeedDto;
 import com.wanted.preonboarding.feed.entity.Feed;
-import com.wanted.preonboarding.feed.repositroy.FeedRepository;
+import com.wanted.preonboarding.feed.repository.FeedRepository;
 import com.wanted.preonboarding.feed.service.FeedService;
 import com.wanted.preonboarding.hashtag.entity.FeedHashTag;
 import com.wanted.preonboarding.hashtag.service.FeedHashTagService;
