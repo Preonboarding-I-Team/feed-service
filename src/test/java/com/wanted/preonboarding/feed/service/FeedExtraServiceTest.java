@@ -58,4 +58,26 @@ class FeedExtraServiceTest {
         assertTrue(result);
         assertEquals(1,feed.getShareCount());
     }
+
+    @Test
+    public void testLikeFeed() {
+        // given
+        Long feedId = 1L;
+        String type = "FACEBOOK";
+
+        Feed feed = Feed.builder().contentId("1").build();
+
+        when(feedRepository.findById(feedId)).thenReturn(Optional.of(feed));
+
+        when(restTemplate.postForEntity(any(String.class), any(), any())).thenAnswer(invocation -> {
+            return ResponseEntity.ok("응답 성공");
+        });
+
+        // when
+        boolean result = feedExtraService.likeFeed(feedId, type);
+
+        // then
+        assertTrue(result);
+        assertEquals(1,feed.getLikeCount());
+    }
 }
