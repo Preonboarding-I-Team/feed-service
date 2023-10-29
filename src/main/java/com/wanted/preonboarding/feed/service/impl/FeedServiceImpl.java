@@ -1,16 +1,23 @@
 package com.wanted.preonboarding.feed.service.impl;
 
 import com.wanted.preonboarding.feed.dto.CreateFeedDto;
+import com.wanted.preonboarding.feed.dto.FeedDto;
+import com.wanted.preonboarding.feed.dto.UpdateFeedDto;
 import com.wanted.preonboarding.feed.entity.Feed;
 import com.wanted.preonboarding.feed.repositroy.FeedRepository;
 import com.wanted.preonboarding.feed.service.FeedService;
 import com.wanted.preonboarding.hashtag.entity.FeedHashTag;
+import com.wanted.preonboarding.hashtag.entity.Hashtag;
 import com.wanted.preonboarding.hashtag.service.FeedHashTagService;
 import com.wanted.preonboarding.hashtag.service.HashtagService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.HashSet;
+import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -34,7 +41,6 @@ public class FeedServiceImpl implements FeedService {
                         .hashtag(hashtag)
                         .build())
                 .collect(Collectors.toSet());
-
         Set<String> hashtags = createFeedDto.getHashtags();
 
         feed.setFeedHashTags(feedHashTags);
@@ -44,6 +50,15 @@ public class FeedServiceImpl implements FeedService {
         }
 
         return feedRepository.save(feed);
+    }
+
+    @Override
+    @Transactional
+    public Page<FeedDto> feedList(Pageable pageable) {
+        Page<Feed> feeds = feedRepository.findAll(pageable);
+        Page<FeedDto> feedDtoPage = feeds.map(FeedDto::fromEntity);
+
+        return feedDtoPage;
     }
 
 }
