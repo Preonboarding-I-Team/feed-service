@@ -1,27 +1,26 @@
 package com.wanted.preonboarding.feed.controller;
 
-import com.wanted.preonboarding.feed.service.FeedService;
+import com.wanted.preonboarding.feed.service.FeedExtraService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.mockito.Mockito;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 
+import org.springframework.http.ResponseEntity;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
-class FeedControllerTest {
+class FeedExtraControllerTest {
 
     @Mock
-    private FeedService feedService;
+    private FeedExtraService feedExtraService;
 
-    private FeedController feedController;
+    private FeedExtraController feedExtraController;
 
     @BeforeEach
     public void setUp() {
-        feedService = Mockito.mock(FeedService.class);
-        feedController = new FeedController(feedService);
+        feedExtraService = Mockito.mock(FeedExtraService.class);
+        feedExtraController = new FeedExtraController(feedExtraService);
     }
 
     @Test
@@ -30,10 +29,10 @@ class FeedControllerTest {
         Long feedId = 1L;
         String type = "FASCEBOOK";
 
-        when(feedService.shareFeed(feedId, type)).thenReturn(true);
+        when(feedExtraService.shareFeed(feedId, type)).thenReturn(true);
 
         // when
-        ResponseEntity<String> response = feedController.shareFeed(type, feedId);
+        ResponseEntity<String> response = feedExtraController.shareFeed(type, feedId);
 
         // then
         assertEquals(200, response.getStatusCodeValue());

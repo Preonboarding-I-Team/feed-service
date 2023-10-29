@@ -18,7 +18,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
-class FeedServiceTest {
+class FeedExtraServiceTest {
 
     @Mock
     private FeedRepository feedRepository;
@@ -27,13 +27,13 @@ class FeedServiceTest {
     private RestTemplate restTemplate;
 
     @InjectMocks
-    private FeedService feedService;
+    private FeedExtraService feedExtraService;
 
     @BeforeEach
     public void setUp() {
         feedRepository = Mockito.mock(FeedRepository.class);
         restTemplate = Mockito.mock(RestTemplate.class);
-        feedService = new FeedService(feedRepository, restTemplate);
+        feedExtraService = new FeedExtraService(feedRepository, restTemplate);
 
     }
 
@@ -52,7 +52,7 @@ class FeedServiceTest {
         });
 
         // when
-        boolean result = feedService.shareFeed(feedId, type);
+        boolean result = feedExtraService.shareFeed(feedId, type);
 
         // then
         assertTrue(result);
