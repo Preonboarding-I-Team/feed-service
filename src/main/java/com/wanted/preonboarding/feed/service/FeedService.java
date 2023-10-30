@@ -10,5 +10,6 @@ import org.springframework.data.domain.Pageable;
 public interface FeedService {
     Feed createFeed(CreateFeedDto createFeedDto);
     Page<FeedDto> feedList(Pageable pageable);
-
+    Page<FeedDto> searchByTitle(String keyword, Pageable pageable);
+    Page<FeedDto> searchByContent(String keyword, Pageable pageable);
 }
