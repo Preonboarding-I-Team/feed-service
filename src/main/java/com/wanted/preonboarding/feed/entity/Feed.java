@@ -1,9 +1,13 @@
 package com.wanted.preonboarding.feed.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.wanted.preonboarding.global.entity.BaseEntity;
 import com.wanted.preonboarding.hashtag.entity.FeedHashTag;
 import jakarta.persistence.*;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -43,7 +47,8 @@ public class Feed extends BaseEntity {
     @Column(name = "share_count", columnDefinition = "integer default 0")
     private int shareCount;
 
-    @OneToMany(mappedBy = "feed")
+    @OneToMany(mappedBy = "feed", fetch = FetchType.LAZY)
+    @JsonIgnore
     private Set<FeedHashTag> feedHashTag = new HashSet<>();
 
     public void setFeedHashTags(Set<FeedHashTag> feedHashTags) {
@@ -56,5 +61,12 @@ public class Feed extends BaseEntity {
 
     public void incrementLikeCount() {
         this.likeCount++;
+    }
+
+    public void update(String contentId, String title, String content, FeedType type) {
+        this.contentId = contentId;
+        this.title = title;
+        this.content = content;
+        this.type = type;
     }
 }
