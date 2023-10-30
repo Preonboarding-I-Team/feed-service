@@ -17,5 +17,12 @@ public class FeedHashTagServiceImpl implements FeedHashTagService {
     public FeedHashTag saveFeedHashTag(FeedHashTag feedHashTag) {
         return feedHashTagRepository.save(feedHashTag);
     }
+    @Override
+    public void deleteFeedHashTag(FeedHashTag feedHashTag) {
+        if (feedHashTag != null) {
+            feedHashTagRepository.delete(feedHashTag);
+        }
+    }
+
 
 }
