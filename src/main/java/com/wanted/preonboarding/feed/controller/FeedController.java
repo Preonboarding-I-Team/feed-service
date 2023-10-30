@@ -63,7 +63,14 @@ public class FeedController {
 
         return new ResponseEntity<>(feedPage, HttpStatus.OK);
     }
-
+    @GetMapping("/search-hashtag")
+    public ResponseEntity<Page<FeedResponseDto>> searchByHashtag(
+            @RequestParam String hashtag,
+            Pageable pageable
+    ) {
+        Page<FeedResponseDto> feedPage = feedService.searchByHashtag(hashtag, pageable);
+        return new ResponseEntity<>(feedPage, HttpStatus.OK);
+    }
 
     @GetMapping("/search-type")
     public ResponseEntity<Page<FeedResponseDto>> searchByType(
