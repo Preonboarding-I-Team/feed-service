@@ -4,6 +4,7 @@ import com.wanted.preonboarding.feed.dto.CreateFeedDto;
 import com.wanted.preonboarding.feed.dto.FeedResponseDto;
 import com.wanted.preonboarding.feed.dto.UpdateFeedDto;
 import com.wanted.preonboarding.feed.entity.Feed;
+import com.wanted.preonboarding.feed.entity.FeedType;
 import com.wanted.preonboarding.feed.repository.FeedRepository;
 import com.wanted.preonboarding.feed.service.FeedService;
 import com.wanted.preonboarding.hashtag.entity.FeedHashTag;
@@ -52,6 +53,40 @@ public class FeedServiceImpl implements FeedService {
 
         return feedRepository.save(feed);
     }
+
+
+    @Override
+    @Transactional
+    public Feed updateFeed(Long feedId, UpdateFeedDto updateFeedDto) {
+        Feed existingFeed = feedRepository.findById(feedId)
+                .orElse(null);
+        if (existingFeed == null) {
+            return null;
+        }
+
+        existingFeed.update(updateFeedDto.getContentId(),
+                updateFeedDto.getTitle(),
+                updateFeedDto.getContent(),
+                updateFeedDto.getType());
+
+        deleteFeedHashTagsByFeed(existingFeed);
+
+        Set<FeedHashTag> feedHashTags = updateFeedDto.getHashtags().stream()
+                .map(hashtagService::createHashtag)
+                .map(hashtag -> FeedHashTag.builder()
+                        .feed(existingFeed)
+                        .hashtag(hashtag)
+                        .build())
+                .collect(Collectors.toSet());
+
+        existingFeed.setFeedHashTags(feedHashTags);
+        for (FeedHashTag feedHashTag : feedHashTags) {
+            feedHashTagService.saveFeedHashTag(feedHashTag);
+        }
+
+        return feedRepository.save(existingFeed);
+    }
+
     @Override
     @Transactional(readOnly = true)
     public FeedResponseDto feedDetailById(Long feedId) {
@@ -89,35 +124,11 @@ public class FeedServiceImpl implements FeedService {
     }
 
     @Override
-    @Transactional
-    public Feed updateFeed(Long feedId, UpdateFeedDto updateFeedDto) {
-        Feed existingFeed = feedRepository.findById(feedId)
-                .orElse(null);
-        if (existingFeed == null) {
-            return null;
-        }
+    @Transactional(readOnly = true)
+    public Page<FeedResponseDto> getFeedsByType(FeedType type, Pageable pageable) {
+        Page<Feed> feedPage = feedRepository.findByType(type, pageable);
 
-        existingFeed.update(updateFeedDto.getContentId(),
-                updateFeedDto.getTitle(),
-                updateFeedDto.getContent(),
-                updateFeedDto.getType());
-
-        deleteFeedHashTagsByFeed(existingFeed);
-
-        Set<FeedHashTag> feedHashTags = updateFeedDto.getHashtags().stream()
-                .map(hashtagService::createHashtag)
-                .map(hashtag -> FeedHashTag.builder()
-                        .feed(existingFeed)
-                        .hashtag(hashtag)
-                        .build())
-                .collect(Collectors.toSet());
-
-        existingFeed.setFeedHashTags(feedHashTags);
-        for (FeedHashTag feedHashTag : feedHashTags) {
-            feedHashTagService.saveFeedHashTag(feedHashTag);
-        }
-
-        return feedRepository.save(existingFeed);
+        return feedPage.map(FeedResponseDto::fromEntity);
     }
 
 
