@@ -50,4 +50,11 @@ public class Feed extends BaseEntity {
         this.feedHashTag = feedHashTags;
     }
 
+    public void incrementShareCount() {
+        this.shareCount++;
+    }
+
+    public void incrementLikeCount() {
+        this.likeCount++;
+    }
 }
