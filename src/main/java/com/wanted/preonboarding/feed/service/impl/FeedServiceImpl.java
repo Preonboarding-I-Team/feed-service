@@ -136,6 +136,12 @@ public class FeedServiceImpl implements FeedService {
 
         return feedPage.map(FeedResponseDto::fromEntity);
     }
+    @Override
+    @Transactional(readOnly = true)
+    public Page<FeedResponseDto> searchByHashtag(String hashtag, Pageable pageable) {
+        Page<Feed> feedPage = feedRepository.findByHashtagName(hashtag, pageable);
+        return feedPage.map(FeedResponseDto::fromEntity);
+    }
 
 
 

@@ -18,5 +18,6 @@ public interface FeedService {
     Page<FeedResponseDto> searchByTitleOrContent(String title, String content, Pageable pageable);
 
     Page<FeedResponseDto> getFeedsByType(FeedType type, Pageable pageable);
+    Page<FeedResponseDto> searchByHashtag(String hashtag, Pageable pageable);
 
 }
