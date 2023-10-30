@@ -45,24 +45,29 @@ public class FeedController {
 
     @GetMapping("/search")
     public ResponseEntity<Page<FeedResponseDto>> searchFeeds(
-            @RequestParam String search_by,
+            @RequestParam String by,
             @RequestParam String keyword,
             Pageable pageable
     ) {
         Page<FeedResponseDto> feedPage;
 
-        if ("title".equalsIgnoreCase(search_by)) {
+        if ("title".equalsIgnoreCase(by)) {
             feedPage = feedService.searchByTitle(keyword, pageable);
-        } else if ("content".equalsIgnoreCase(search_by)) {
+        } else if ("content".equalsIgnoreCase(by)) {
             feedPage = feedService.searchByContent(keyword, pageable);
+        } else if ("title-or-content".equalsIgnoreCase(by)) {
+            feedPage = feedService.searchByTitleOrContent(keyword, keyword, pageable);
         } else {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
+
         return new ResponseEntity<>(feedPage, HttpStatus.OK);
     }
-    @GetMapping("/searchByType")
+
+
+    @GetMapping("/search-type")
     public ResponseEntity<Page<FeedResponseDto>> searchByType(
-            @RequestParam(name = "type", required = false, defaultValue = "") FeedType type,
+            @RequestParam(name = "by", required = false, defaultValue = "") FeedType type,
             Pageable pageable
     ) {
         if (type == null) {
@@ -73,4 +78,3 @@ public class FeedController {
     }
 
 }
-
