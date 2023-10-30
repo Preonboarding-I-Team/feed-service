@@ -11,6 +11,8 @@ import org.springframework.stereotype.Repository;
 public interface FeedRepository extends JpaRepository<Feed, Long>, FeedRepositoryCustom {
     Page<Feed> findByTitleContaining(String keyword, Pageable pageable);
     Page<Feed> findByContentContaining(String keyword, Pageable pageable);
+    Page<Feed> findByTitleContainingOrContentContaining(String title, String content, Pageable pageable);
+
     Page<Feed> findByType(FeedType type, Pageable pageable);
 
 }
