@@ -15,6 +15,8 @@ public interface FeedService {
     Page<FeedResponseDto> feedList(Pageable pageable);
     Page<FeedResponseDto> searchByTitle(String keyword, Pageable pageable);
     Page<FeedResponseDto> searchByContent(String keyword, Pageable pageable);
+    Page<FeedResponseDto> searchByTitleOrContent(String title, String content, Pageable pageable);
+
     Page<FeedResponseDto> getFeedsByType(FeedType type, Pageable pageable);
 
 }

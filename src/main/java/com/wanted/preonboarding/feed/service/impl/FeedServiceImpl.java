@@ -122,7 +122,13 @@ public class FeedServiceImpl implements FeedService {
 
         return feedDtoPage;
     }
+    @Override
+    @Transactional(readOnly = true)
+    public Page<FeedResponseDto> searchByTitleOrContent(String title, String content, Pageable pageable) {
+        Page<Feed> feedPage = feedRepository.findByTitleContainingOrContentContaining(title, content, pageable);
 
+        return feedPage.map(FeedResponseDto::fromEntity);
+    }
     @Override
     @Transactional(readOnly = true)
     public Page<FeedResponseDto> getFeedsByType(FeedType type, Pageable pageable) {
