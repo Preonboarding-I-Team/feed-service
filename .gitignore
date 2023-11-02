@@ -174,4 +174,8 @@ gradle-app.setting
 # Java heap dump
 *.hprof
 
-./src/main/resources/application.yml
+*.yml
+
+.idea
+
+src/main/generated
