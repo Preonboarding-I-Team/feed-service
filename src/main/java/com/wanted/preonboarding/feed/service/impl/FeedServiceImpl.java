@@ -29,7 +29,6 @@ public class FeedServiceImpl implements FeedService {
     private final FeedHashTagService feedHashTagService;
     private final FeedHashTagRepository feedHashTagRepository;
 
-
     @Override
     @Transactional
     public Feed createFeed(CreateFeedDto createFeedDto) {
@@ -53,6 +52,7 @@ public class FeedServiceImpl implements FeedService {
 
         return feedRepository.save(feed);
     }
+
     @Override
     @Transactional(readOnly = true)
     public FeedResponseDto feedDetailById(Long feedId) {
@@ -120,8 +120,6 @@ public class FeedServiceImpl implements FeedService {
 
         return feedRepository.save(existingFeed);
     }
-
-
 
     private void deleteFeedHashTagsByFeed(Feed feed) {
         List<FeedHashTag> feedHashTags = feedHashTagRepository.findByFeed(feed);
@@ -129,74 +127,6 @@ public class FeedServiceImpl implements FeedService {
         feedHashTagRepository.deleteAll(feedHashTags);
     }
 
-
-    @Override
-    @Transactional
-    public Feed updateFeed(Long feedId, UpdateFeedDto updateFeedDto) {
-        Feed existingFeed = feedRepository.findById(feedId)
-                .orElse(null);
-        if (existingFeed == null) {
-            return null;
-        }
-
-        existingFeed.update(updateFeedDto.getContentId(),
-                updateFeedDto.getTitle(),
-                updateFeedDto.getContent(),
-                updateFeedDto.getType());
-
-        deleteFeedHashTagsByFeed(existingFeed);
-
-        Set<FeedHashTag> feedHashTags = updateFeedDto.getHashtags().stream()
-                .map(hashtagService::createHashtag)
-                .map(hashtag -> FeedHashTag.builder()
-                        .feed(existingFeed)
-                        .hashtag(hashtag)
-                        .build())
-                .collect(Collectors.toSet());
-
-        existingFeed.setFeedHashTags(feedHashTags);
-        for (FeedHashTag feedHashTag : feedHashTags) {
-            feedHashTagService.saveFeedHashTag(feedHashTag);
-        }
-
-        return feedRepository.save(existingFeed);
-    }
-
-    @Override
-    @Transactional(readOnly = true)
-    public FeedResponseDto feedDetailById(Long feedId) {
-        Feed feed = feedRepository.findById(feedId)
-                .orElseThrow(() -> new IllegalArgumentException("해당 " + feedId + "가 존재하지 않습니다."));
-
-        return FeedResponseDto.fromEntity(feed);
-    }
-
-    @Override
-    @Transactional
-    public Page<FeedResponseDto> feedList(Pageable pageable) {
-        Page<Feed> feeds = feedRepository.findAll(pageable);
-        Page<FeedResponseDto> feedDtoPage = feeds.map(FeedResponseDto::fromEntity);
-
-        return feedDtoPage;
-    }
-
-    @Override
-    @Transactional(readOnly = true)
-    public Page<FeedResponseDto> searchByTitle(String keyword, Pageable pageable) {
-        Page<Feed> feedPage = feedRepository.findByTitleContaining(keyword, pageable);
-        Page<FeedResponseDto> feedDtoPage = feedPage.map(FeedResponseDto::fromEntity);
-
-        return feedDtoPage;
-    }
-
-    @Override
-    @Transactional(readOnly = true)
-    public Page<FeedResponseDto> searchByContent(String keyword, Pageable pageable) {
-        Page<Feed> feedPage = feedRepository.findByContentContaining(keyword, pageable);
-        Page<FeedResponseDto> feedDtoPage = feedPage.map(FeedResponseDto::fromEntity);
-
-        return feedDtoPage;
-    }
     @Override
     @Transactional(readOnly = true)
     public Page<FeedResponseDto> searchByTitleOrContent(String title, String content, Pageable pageable) {
@@ -204,6 +134,7 @@ public class FeedServiceImpl implements FeedService {
 
         return feedPage.map(FeedResponseDto::fromEntity);
     }
+
     @Override
     @Transactional(readOnly = true)
     public Page<FeedResponseDto> getFeedsByType(FeedType type, Pageable pageable) {
@@ -211,19 +142,12 @@ public class FeedServiceImpl implements FeedService {
 
         return feedPage.map(FeedResponseDto::fromEntity);
     }
+
     @Override
     @Transactional(readOnly = true)
     public Page<FeedResponseDto> searchByHashtag(String hashtag, Pageable pageable) {
         Page<Feed> feedPage = feedRepository.findByHashtagName(hashtag, pageable);
+
         return feedPage.map(FeedResponseDto::fromEntity);
     }
-
-
-
-    private void deleteFeedHashTagsByFeed(Feed feed) {
-        List<FeedHashTag> feedHashTags = feedHashTagRepository.findByFeed(feed);
-
-        feedHashTagRepository.deleteAll(feedHashTags);
-    }
-
 }
